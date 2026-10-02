@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="КодСтарт — онлайн-школа программирования: запись на курсы Python, JavaScript, HTML/CSS и SQL.">
+  <title>{% block title %}КодСтарт{% endblock %} — школа программирования</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <header class="header">
+    <div class="container header__inner">
+      <a class="logo" href="{{ url_for('index') }}" aria-label="КодСтарт — на главную">
+        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="32" height="32">
+        <span>КодСтарт</span>
+      </a>
+      <nav class="nav" aria-label="Основная навигация">
+        {% if session.user_id %}
+          {% if session.role == 'admin' %}
+            <a href="{{ url_for('admin') }}">Заявки</a>
+          {% else %}
+            <a href="{{ url_for('cabinet') }}">Мои заявки</a>
+          {% endif %}
+          <a href="{{ url_for('logout') }}" class="btn btn--ghost btn--sm">Выйти</a>
+        {% else %}
+          <a href="{{ url_for('login') }}">Вход</a>
+          <a href="{{ url_for('register') }}" class="btn btn--sm">Регистрация</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container">© 2026 КодСтарт — школа программирования</div>
+  </footer>
+
+  <div class="toasts" id="toasts" aria-live="polite">
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+      <div class="toast toast--{{ category }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

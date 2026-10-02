@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+<section class="container narrow">
+  <div class="panel">
+    <h1>Вход</h1>
+    {% if error %}<div class="alert" role="alert">{{ error }}</div>{% endif %}
+    <form method="post" class="form" novalidate data-validate>
+      <div class="field">
+        <label for="login">Логин</label>
+        <input id="login" name="login" type="text" required autocomplete="username">
+        <small class="field__error" data-for="login"></small>
+      </div>
+      <div class="field">
+        <label for="password">Пароль</label>
+        <input id="password" name="password" type="password" required autocomplete="current-password">
+        <small class="field__error" data-for="password"></small>
+      </div>
+      <button class="btn btn--block" type="submit">Войти</button>
+    </form>
+    <p class="muted center">Нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p>
+  </div>
+</section>
+{% endblock %}

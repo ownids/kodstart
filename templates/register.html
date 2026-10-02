@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+<section class="container narrow">
+  <div class="panel">
+    <h1>Регистрация</h1>
+    <form method="post" novalidate class="form" data-validate>
+      {% set fields = [
+        ('login', 'Логин', 'text', 'латиница и цифры, от 4 символов'),
+        ('password', 'Пароль', 'password', 'не менее 6 символов'),
+        ('full_name', 'ФИО', 'text', 'Иванов Иван Иванович'),
+        ('phone', 'Телефон', 'tel', '8(XXX)XXX-XX-XX'),
+        ('email', 'Email', 'email', 'name@example.com')] %}
+      {% for name, label, type, hint in fields %}
+      <div class="field{% if errors.get(name) %} has-error{% endif %}">
+        <label for="{{ name }}">{{ label }}</label>
+        <input id="{{ name }}" name="{{ name }}" type="{{ type }}" placeholder="{{ hint }}"
+               value="{{ form.get(name, '') if name != 'password' else '' }}" required>
+        <small class="field__error" data-for="{{ name }}">{{ errors.get(name, '') }}</small>
+      </div>
+      {% endfor %}
+      <button class="btn btn--block" type="submit">Зарегистрироваться</button>
+    </form>
+    <p class="muted center">Уже есть аккаунт? <a href="{{ url_for('login') }}">Войти</a></p>
+  </div>
+</section>
+{% endblock %}

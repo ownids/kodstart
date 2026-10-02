@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<section class="hero container">
+  <h1>Освойте программирование с нуля</h1>
+  <p class="muted">Короткие практические курсы с наставником. Оставьте заявку — и начните учиться уже на этой неделе.</p>
+
+  <div class="slider" id="slider" aria-roledescription="карусель" aria-label="Наши курсы">
+    <div class="slider__track">
+      {% for i in range(1, 5) %}
+      <img class="slider__slide{% if i == 1 %} is-active{% endif %}"
+           src="{{ url_for('static', filename='img/slide' ~ i ~ '.webp') }}"
+           alt="Курс {{ i }}" width="800" height="450" {% if i > 1 %}loading="lazy"{% endif %}>
+      {% endfor %}
+    </div>
+    <button class="slider__btn slider__btn--prev" type="button" aria-label="Предыдущий слайд">&#8249;</button>
+    <button class="slider__btn slider__btn--next" type="button" aria-label="Следующий слайд">&#8250;</button>
+    <div class="slider__progress"><span></span></div>
+  </div>
+
+  <a class="btn btn--lg" href="{{ url_for('cabinet' if session.user_id else 'register') }}">Записаться на курс</a>
+</section>
+
+<section class="container">
+  <h2>Курсы</h2>
+  <div class="grid">
+    {% for c in courses %}
+    <article class="card">
+      <h3>{{ c.title }}</h3>
+      <p class="muted">{{ c.description }}</p>
+      <div class="card__meta">
+        <span class="badge">{{ c.duration_weeks }} нед.</span>
+        <strong>{{ '{:,.0f}'.format(c.price).replace(',', ' ') }} ₽</strong>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Панель администратора{% endblock %}
+{% block content %}
+<section class="container">
+  <h1>Заявки <span class="muted">({{ total }})</span></h1>
+
+  <form class="filters" method="get">
+    <input type="search" name="q" value="{{ search }}" placeholder="Поиск по ФИО или курсу" aria-label="Поиск">
+    <select name="status" aria-label="Фильтр по статусу">
+      <option value="">Все статусы</option>
+      {% for s in statuses %}
+      <option value="{{ s.id }}"{% if status_filter == s.id|string %} selected{% endif %}>{{ s.name }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn" type="submit">Применить</button>
+  </form>
+
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>№</th><th>Клиент</th><th>Курс</th><th>Старт</th><th>Оплата</th><th>Статус</th></tr></thead>
+      <tbody>
+      {% for a in apps %}
+        <tr>
+          <td data-label="№">{{ a.id }}</td>
+          <td data-label="Клиент">{{ a.full_name }}<div class="muted">{{ a.phone }}</div></td>
+          <td data-label="Курс">{{ a.title }}</td>
+          <td data-label="Старт">{{ a.start_date|rudate }}</td>
+          <td data-label="Оплата">{{ payments[a.payment_method] }}</td>
+          <td data-label="Статус">
+            <select class="status-select" data-url="{{ url_for('change_status', app_id=a.id) }}" aria-label="Статус заявки {{ a.id }}">
+              {% for s in statuses %}
+              <option value="{{ s.id }}"{% if s.id == a.status_id %} selected{% endif %}>{{ s.name }}</option>
+              {% endfor %}
+            </select>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">Заявки не найдены</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if pages > 1 %}
+  <nav class="pagination" aria-label="Страницы">
+    {% for p in range(1, pages + 1) %}
+      <a href="{{ url_for('admin', page=p, status=status_filter, q=search) }}"
+         class="{% if p == page %}is-current{% endif %}"{% if p == page %} aria-current="page"{% endif %}>{{ p }}</a>
+    {% endfor %}
+  </nav>
+  {% endif %}
+</section>
+{% endblock %}

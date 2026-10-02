@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Мои заявки{% endblock %}
+{% block content %}
+<section class="container two-col">
+  <div class="panel">
+    <h1>Новая заявка</h1>
+    <form method="post" class="form" novalidate>
+      <div class="field{% if errors.course_id %} has-error{% endif %}">
+        <label for="course_id">Курс</label>
+        <select id="course_id" name="course_id" required>
+          <option value="">— выберите курс —</option>
+          {% for c in courses %}<option value="{{ c.id }}">{{ c.title }}</option>{% endfor %}
+        </select>
+        <small class="field__error">{{ errors.course_id }}</small>
+      </div>
+      <div class="field{% if errors.start_date %} has-error{% endif %}">
+        <label for="start_date">Желаемая дата начала</label>
+        <input id="start_date" name="start_date" type="date" min="{{ today }}" required>
+        <small class="field__error">{{ errors.start_date }}</small>
+      </div>
+      <fieldset class="field{% if errors.payment_method %} has-error{% endif %}">
+        <legend>Способ оплаты</legend>
+        <div class="chips">
+          {% for key, label in payments.items() %}
+          <label class="chip"><input type="radio" name="payment_method" value="{{ key }}"{% if loop.first %} checked{% endif %}> {{ label }}</label>
+          {% endfor %}
+        </div>
+        <small class="field__error">{{ errors.payment_method }}</small>
+      </fieldset>
+      <div class="field">
+        <label for="comment">Комментарий</label>
+        <textarea id="comment" name="comment" rows="3" maxlength="255" placeholder="Удобное время занятий, вопросы"></textarea>
+      </div>
+      <button class="btn btn--block" type="submit">Отправить заявку</button>
+    </form>
+  </div>
+
+  <div>
+    <h2>Мои заявки</h2>
+    {% if apps %}
+    <ul class="list">
+      {% for a in apps %}
+      <li class="list__item">
+        <div>
+          <strong>{{ a.title }}</strong>
+          <div class="muted">Старт: {{ a.start_date|rudate }} · {{ payments[a.payment_method] }}</div>
+        </div>
+        <span class="status status--{{ a.status_id }}">{{ a.status }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">Заявок пока нет — оформите первую слева.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
